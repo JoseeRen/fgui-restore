@@ -3637,15 +3637,39 @@ const handleSprites = async (spritesMap, flag = true, resFiles) => {
                     let { x, y, width, height } = rect;
                     // width = rotated ? rect.height : width;
                     // height = rotated ? rect.width : height;
-                    let bitmap = image.crop(x, y, width, height);
+                    	try{
+					let bitmap = image.crop(x, y, width, height);
                     if (rotated) {
                         bitmap.rotate(-90);
                     }
                     bitmap.writeAsync(output).then(() => {
                         resolve();
                     }).catch((err) => {
-                        reject(err)
+						 resolve();
+                       // reject(err)
                     });
+					}catch(e){
+                            //裁单张图时从x 1 y1开始的 可能越界了  置成0
+						console.log(x,y,width,height)
+						console.log(width,height)
+						console.log(name+"----"+rotated)
+						console.log(e)
+						console.log("异常了")
+						 //resolve();
+						x=0;
+						y=0
+let bitmap = image.crop(x, y, width, height);
+                    if (rotated) {
+                        bitmap.rotate(-90);
+                    }
+                    bitmap.writeAsync(output).then(() => {
+                        resolve();
+                    }).catch((err) => {
+						 resolve();
+                       // reject(err)
+                    });
+						
+					}
                 })
                 .catch(err => {
                     // Handle an exception.
